@@ -69,7 +69,6 @@
 
 
 <script>
-import { getGoogleAnalyticsClientId } from 'firebase/analytics';
 
     export default {
         data:()=>({
@@ -78,11 +77,8 @@ import { getGoogleAnalyticsClientId } from 'firebase/analytics';
 
         }),
 
-         methods:{
-            onClick(icon){
-                this.page= item.title;
-                this.$router.push('/'+this.page.toLowerCase())
-            }
+         methods:{ 
+         
             
         },
         message:{

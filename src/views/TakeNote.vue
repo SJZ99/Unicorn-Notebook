@@ -17,9 +17,9 @@
 
 
 <script>
- import Header from '@/components/Header.vue'
+
 import TakeNote from '@/Components/NoteTaking.vue'
-import EndBox from '@/Components/endBox.vue'
+
 
     export default {
         
@@ -32,8 +32,7 @@ import EndBox from '@/Components/endBox.vue'
 
         components:{
             TakeNote,
-            Header,
-            EndBox,
+            
         },
     }
 </script>

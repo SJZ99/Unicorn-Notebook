@@ -1,5 +1,4 @@
 
-
 <template>
     <div class="page">
         <div class="boxNotes">
@@ -115,8 +114,7 @@
 
 <script>
 
-import { getAuth, uploadImage } from '@/plugins/fireBase.js';
-import { getDownloadURL } from 'firebase/storage';
+import { auth, uploadImage } from '@/plugins/fireBase.js';
 
 import { uploadText } from '@/plugins/fireBase.js';
 import addNewPhoto from '@/assets/addNewPhoto.png'
@@ -139,7 +137,7 @@ import addNewPhoto from '@/assets/addNewPhoto.png'
         plan: "",
         loading: false,
         previewUrl:"",
-        test: getAuth.currentuser,
+        test: auth.currentUser,
         dateRules:[
 
         (date) => {
@@ -195,7 +193,7 @@ import addNewPhoto from '@/assets/addNewPhoto.png'
     },
 
     watch: {
-      date (val) {
+      date () {
         this.dateFormatted = this.formatDate(this.date)
       },
     },
@@ -203,7 +201,7 @@ import addNewPhoto from '@/assets/addNewPhoto.png'
     methods: {
       onImageSelected(file){
         if (file[0]==null){
-          previewUrl= "";
+          this.previewUrl= "";
         }
 
         else{

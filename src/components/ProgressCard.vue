@@ -3,6 +3,7 @@
         
             
             <div class="progress-card">
+                <h1>{{ imgUrl }}</h1>
               
                     <div class = "circle"> 
                         
@@ -11,8 +12,7 @@
                           
                             width= 100vw
                             height=auto
-
-                            src="@/assets/noNotes.png"
+                            :src= "imgUrl"
                             ></v-img>
                         
                     
@@ -35,6 +35,9 @@
 
 
 <script>
+import { getPhotoForPreview } from '@/plugins/fireBase';
+import noImage from '@/assets/noImage.png';
+import noNotes from '@/assets/noNotes.png'
     export default {
         props:{
             group: String,
@@ -42,15 +45,33 @@
             imageSrc: String,
 
         },
-        data:()=>({
-         
-
+        data:vm => ({
+            date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+            dateFormatted: "08/31/2023",
+           
         }),
+        computed:{
+
+           imgUrl( ){
+            let imgArr=getPhotoForPreview(this.dateFormatted);
+            
+                if(imgArr.length==0){
+                    return  noImage
+                }
+                else if(imgArr[0]==""){
+                    return noNotes;
+                }
+                else  return  imgArr[0];
+           },
+        
+
+        },
 
         message:{
         },
 
         component:{
+            
         },
     }
 </script>

@@ -1,9 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore"; 
+import { getFirestore, collection, doc, setDoc,addDoc, query, where, getDocs } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -96,7 +95,7 @@ async function uploadImage(file){
           // ...
   
           case 'storage/unknown':
-            state= unknown;
+            state= "unknown";
             // Unknown error occurred, inspect error.serverResponse
             break;
         }
@@ -143,6 +142,35 @@ async function uploadText(group,date,image, member, slider, progress, problem, p
   
 }
 
+// searching database
+
+
+
+
+async function getPhotoForPreview(dateToday){
+ var imgUrl=[];
+ 
+try{
+      const q = query(collection(db, "date"), where("date", "==", dateToday));
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        imgUrl.push(doc.data().image);
+      });
+
+      return imgUrl
+  }  
+  catch(e){
+    console.error("Error finding img url: ", e);
+  }
+
+
+}
+
+
+
 self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 
 const appCheck = initializeAppCheck(app, {
@@ -167,7 +195,6 @@ async function signIn( email, password){
   )
   .catch((error)=>{
 
-    const errorCode = error.code;
     const errorMessage = error.message;
 
     reject(errorMessage);
@@ -182,6 +209,6 @@ async function signIn( email, password){
 
 
 export {
-  uploadImage, getDownloadURL, uploadText, signIn, getAuth
+  uploadImage, getDownloadURL, uploadText, signIn, auth, getPhotoForPreview
 }
 

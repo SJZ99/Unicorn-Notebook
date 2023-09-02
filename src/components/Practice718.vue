@@ -28,15 +28,21 @@
 
 
 <script>
+
     export default {
         data:()=>({
             message : "Hello"
+           
 
         }),
 
         message:{
         },
-
+        computed:
+        {
+           
+            
+        },
         component:{
         },
     }
