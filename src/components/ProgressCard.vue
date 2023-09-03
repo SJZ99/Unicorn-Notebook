@@ -3,7 +3,6 @@
         
             
             <div class="progress-card">
-                <h1>{{ imgUrl }}</h1>
               
                     <div class = "circle"> 
                         
@@ -12,7 +11,8 @@
                           
                             width= 100vw
                             height=auto
-                            :src= "imgUrl"
+                            :src= "imgUrl()"
+
                             ></v-img>
                         
                     
@@ -47,26 +47,57 @@ import noNotes from '@/assets/noNotes.png'
         },
         data:vm => ({
             date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-            dateFormatted: "08/31/2023",
+           dateFormatted:vm.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
            
         }),
         computed:{
 
-           imgUrl( ){
-            let imgArr=getPhotoForPreview(this.dateFormatted);
-            
-                if(imgArr.length==0){
-                    return  noImage
-                }
-                else if(imgArr[0]==""){
-                    return noNotes;
-                }
-                else  return  imgArr[0];
-           },
+           
         
 
         },
+        methods: {
+            formatDate (date) {
+                if (!date) return null
 
+                const [year, month, day] = date.split('-')
+                return `${month}/${day}/${year}`
+            },
+            parseDate (date) {
+                if (!date) return null
+
+                const [month, day, year] = date.split('/')
+                return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+            },
+
+            imgUrl( ) {
+
+      
+            getPhotoForPreview("08/31/2023").then((imgArr)=>{
+                let realUrl="";
+               // console.log(imgArr);
+                if(imgArr.length==0){
+                    realUrl=  noImage
+                }
+                else if(imgArr[0]==""){ 
+                    realUrl= noNotes;
+                }
+                else { realUrl=  imgArr[0];}
+                console.log(realUrl);
+                 return realUrl;
+            })
+            .catch((value)=>{
+
+                console.log("{wrong}");
+
+            })
+
+          
+            
+
+            
+           },
+        },
         message:{
         },
 

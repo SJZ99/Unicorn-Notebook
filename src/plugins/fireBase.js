@@ -151,16 +151,17 @@ async function getPhotoForPreview(dateToday){
  var imgUrl=[];
  
 try{
-      const q = query(collection(db, "date"), where("date", "==", dateToday));
+      const q = query(collection(db, "Notebook"), where("date", "==", dateToday));
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
+        // console.log(doc.id, " => ", doc.data());
+        // console.log(doc.data().image);
         imgUrl.push(doc.data().image);
       });
-
-      return imgUrl
+      
+      return imgUrl;
   }  
   catch(e){
     console.error("Error finding img url: ", e);
