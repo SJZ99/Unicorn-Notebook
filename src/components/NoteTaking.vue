@@ -4,12 +4,13 @@
         <div class="boxNotes">
        
           <v-form
-            @submit.prevent="submit"
+            @submit.prevent="pressSubmit"
            
           >
               <v-select
               label="Choose Group"
               :items= items
+              :rules=required
               v-model= selected
               ></v-select>
 
@@ -61,7 +62,7 @@
             <v-text-field
               v-model="Members"
               label="Members"
-              required
+              :rules="required"
             ></v-text-field>
 
               
@@ -75,21 +76,25 @@
           track-color=#eac4d5
           max-width="290px"
               min-width="auto"
+              :rules="required"
         
           ></v-slider>
 
           <!-- <h2> Progress</h2> -->
           <v-textarea label="Today's Progress"
           
-          v-model="progress"></v-textarea>
+          v-model="progress" 
+          :rules="required"></v-textarea>
           <!-- <h2> Problem Faced</h2> -->
           <v-textarea label="Problem Faced"
           
-          v-model="problem"></v-textarea>
+          v-model="problem"
+          :rules="required"></v-textarea>
 
           <v-textarea label="Plan for Tomorrow"
           
-          v-model="plan"></v-textarea>
+          v-model="plan"
+          :rules="required"></v-textarea>
           <v-btn
           :loading="loading"
           type="submit"
@@ -118,6 +123,8 @@ import { auth, uploadImage } from '@/plugins/fireBase.js';
 
 import { uploadText } from '@/plugins/fireBase.js';
 import addNewPhoto from '@/assets/addNewPhoto.png'
+import { connectStorageEmulator } from 'firebase/storage';
+
 
     export default {
     
@@ -138,6 +145,7 @@ import addNewPhoto from '@/assets/addNewPhoto.png'
         loading: false,
         previewUrl:"",
         test: auth.currentUser,
+        imgBool: "0",
         dateRules:[
 
         (date) => {
@@ -172,12 +180,20 @@ import addNewPhoto from '@/assets/addNewPhoto.png'
           }
         ],
 
+        required: [
+        value => {
+          if (value) return true
+
+          return 'This field must be filled'
+        },
+      ],
+
         
       rules: [value => vm.checkApi(value)],
       timeout: null,
       url:'',
     }),
-
+  
 
     computed: {
       computedDateFormatted () {
@@ -224,24 +240,43 @@ import addNewPhoto from '@/assets/addNewPhoto.png'
 
       async submit() {
 
-        
-        uploadImage(this.file[0])
-        .then((downloadURL) => {
-          console.log(downloadURL);
-           this.url =downloadURL;
-           
-           uploadText(this.selected, this.dateFormatted, this.url, this.Members, this.slider1, this.progress, this.progress, this.plan);
-           this.$router.push('/submitted');
-        
-        })
-        // 失敗的行為一律交給了 catch
-        .catch((state) => {
-         this.url = state
+     window.alert(this.file.length);
 
-        });
+      
+            window.alert("onePic");
 
+            uploadImage(this.file[0])
+                .then((downloadURL) => {
+                  console.log(downloadURL);
+                  
+                  this.url =downloadURL;
+                  console.log("pic");
+                  uploadText(this.selected, this.dateFormatted, this.url, this.Members, this.slider1, this.progress, this.progress, this.plan, this.imgBool);
+                  this.$router.push('/submitted');
+                
+                })
+                // 失敗的行為一律交給了 catch
+                .catch((state) => {
+                this.url = state
 
-        
+                });
+          
+
+          },
+
+ pressSubmit(){
+
+          if(this.file.length==1){
+            this.imgBool="1";
+            this.submit();
+            console.log("finish differentiating imgBool");
+          }
+          else{
+            this.imgBool="0";
+            uploadText(this.selected, this.dateFormatted, "noImg", this.Members, this.slider1, this.progress, this.progress, this.plan, this.imgBool);
+                  this.$router.push('/submitted');
+                  console.log("finish differentiating imgBool");
+          }
 
       },
       async checkApi(userName) {
@@ -257,13 +292,10 @@ import addNewPhoto from '@/assets/addNewPhoto.png'
           }, 1000)
         })
       },
+
+      },
       
-    },
-  
 
-
-        
-   
         message:{
         },
 

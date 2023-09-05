@@ -7,23 +7,28 @@
    
 
     <ProgressCard
-      group= "策略"
-    
-      :progress= "progress">
+      :group= "note1"
+       @group="(gr)=>note1= gr"
+      :progress= "progress"
+      @update="(val)=>progress= val"
+      
+    >
       
 
     </ProgressCard>
 
     <ProgressCard
-      group= "電資"
-      :progress= "progress">
+      :group= "note2"
+      :progress= "progress"
+      @update="(val)=>progress= val">
       
 
     </ProgressCard>
 
     <ProgressCard
-      group= "機構"
-      :progress= "progress">
+      :group= "note3"
+      :progress= "progress"
+      @update="(val)=>progress= val">
       
 
     </ProgressCard>
@@ -39,23 +44,46 @@
  import Header from '@/components/Header.vue'
  import ProgressCard from '@/components/ProgressCard.vue'
  import Footer from '@/components/endBox.vue'
+import { getUserNotes } from '@/plugins/fireBase'
 
 
   export default {
+ 
     props:{
+      
     },
     data:()=>({  
-      progress:10
+      progress:10,
+      note1:"",
+      note2:"",
+      note3:"",
+           
      
     }),
 
+  mounted(){
+    
+      
+    getUserNotes().then((noteArr)=>{
+                this.note1=noteArr[0];
+             
+                this.note2=noteArr[1];
+                this.note3=noteArr[2];
+            
+            })
+            .catch((errorMessage)=>{
+                console.log(errorMessage);
+
+            })
+
+    },
     message:{
     },
 
     components:{
       ProgressCard,
       Header,
-      Footer
+      Footer,
     },
   }
 </script>

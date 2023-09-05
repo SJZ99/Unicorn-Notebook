@@ -39,6 +39,7 @@ Date.getDateString = function() {
 
 
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+//import { reject } from "core-js/fn/promise";
 // import { resolve } from "core-js/fn/promise";
 
 const storage = getStorage();
@@ -59,7 +60,7 @@ async function uploadImage(file){
   
     // Create a reference to 'images/mountains.jpg'
     const pictureImagesRef = ref(pictureRef, Date.now()+'jpg'); //照片本人
-  
+
     const uploadTask = uploadBytesResumable(pictureImagesRef, file, metadata);
   
     // Listen for state changes, errors, and completion of the upload.
@@ -120,7 +121,7 @@ async function uploadImage(file){
 }
 
 
-async function uploadText(group,date,image, member, slider, progress, problem, plan){
+async function uploadText(group,date,image, member, slider, progress, problem, plan, imgBool){
 
 
   try {
@@ -133,7 +134,8 @@ async function uploadText(group,date,image, member, slider, progress, problem, p
       slider: slider,
       progress: progress,
       problem: problem,
-      plan: plan
+      plan: plan,
+      imgBool:imgBool,
     });
     console.log("Document written with ID: ", docRef.id);
   } catch (e) {
@@ -147,19 +149,30 @@ async function uploadText(group,date,image, member, slider, progress, problem, p
 
 
 
-async function getPhotoForPreview(dateToday){
+async function getPhotoForPreview(dateToday, group){
  var imgUrl=[];
  
 try{
-      const q = query(collection(db, "Notebook"), where("date", "==", dateToday));
+      const q = query(collection(db, "Notebook"), where("date", "==", dateToday),where("imgBool","==","1"),where("group","==",group));
+      const q2 = query(collection(db, "Notebook"), where("date", "==", dateToday),where("imgBool","==","0"),where("group","==",group));
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        // console.log(doc.id, " => ", doc.data());
-        // console.log(doc.data().image);
+        console.log(doc.id, " => ", doc.data());
+        console.log(doc.data().image);
         imgUrl.push(doc.data().image);
       });
+
+      if(imgUrl.length==0){
+        const querySnapshot = await getDocs(q2);
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+          console.log(doc.data().image);
+          imgUrl.push(doc.data().image);
+        });
+      }
       
       return imgUrl;
   }  
@@ -208,8 +221,37 @@ async function signIn( email, password){
   )
 }
 
+async function getUserNotes(){
+  var userNotes=[];
+  // let userString = getAuth().currentUser.uid;
+  // console.log(userString+"!!!"+"look here");
+  
+ try{
+       const q = query(collection(db, "UserInformation"), where("user", "==","WmS4EGjVqUVJ8AqrxYjBa8ctMaH3"));
+
+ 
+       const querySnapshot = await getDocs(q);
+       querySnapshot.forEach((doc) => {
+         // doc.data() is never undefined for query doc snapshots
+         console.log(doc.id, " => ", doc.data());
+         console.log(doc.data().note1+" "+doc.data().note2+" "+ doc.data().note3);
+         userNotes.push(doc.data().note1);
+         userNotes.push(doc.data().note2);
+         userNotes.push(doc.data().note3);
+       });
+ 
+
+       return userNotes;
+   }  
+   catch(e){
+     console.error("Error finding img url: ", e);
+   }
+ 
+ 
+ }
+ 
 
 export {
-  uploadImage, getDownloadURL, uploadText, signIn, auth, getPhotoForPreview
+  uploadImage, getDownloadURL, uploadText, signIn, auth, getPhotoForPreview,getUserNotes
 }
 

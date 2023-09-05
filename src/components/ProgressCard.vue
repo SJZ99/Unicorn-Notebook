@@ -6,14 +6,21 @@
               
                     <div class = "circle"> 
                         
-                        <v-img
+
+
+                        <img 
+                            :src= "img"
+                            >
+
+                            <!-- <v-img
                             contain
                           
                             width= 100vw
                             height=auto
-                            :src= "imgUrl()"
-
-                            ></v-img>
+                            :src= "img"
+                            border-radius="50%"
+                            ></v-img> -->
+                        
                         
                     
                     </div>
@@ -35,10 +42,39 @@
 
 
 <script>
-import { getPhotoForPreview } from '@/plugins/fireBase';
+import { getPhotoForPreview, getUserNotes } from '@/plugins/fireBase';
 import noImage from '@/assets/noImage.png';
 import noNotes from '@/assets/noNotes.png'
     export default {
+
+        mounted() { 
+
+                    this.$emit("group", this.group);
+                    console.log(this.group+"noEmit");
+
+
+                getPhotoForPreview(this.dateFormatted, this.group)
+                .then((imgArr)=>{
+                    console.log(this.group+"wiefjlgjhl");
+                    let realUrl="";
+                console.log(imgArr);
+                    if(imgArr.length==0){
+                        realUrl=  noNotes
+                    }
+                    else if(imgArr[0]=="noImg"){ 
+                        realUrl= noImage;
+                    }
+                    else { realUrl=  imgArr[0];}
+                    console.log(realUrl);
+                    this.img=realUrl;
+                    return realUrl;
+                })
+                .catch((value)=>{
+
+                    console.log("{wrong}");
+
+                })
+            },
         props:{
             group: String,
             progress: Number,
@@ -48,7 +84,9 @@ import noNotes from '@/assets/noNotes.png'
         data:vm => ({
             date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
            dateFormatted:vm.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
-           
+           img:"",
+          
+     
         }),
         computed:{
 
@@ -70,33 +108,7 @@ import noNotes from '@/assets/noNotes.png'
                 return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
             },
 
-            imgUrl( ) {
-
-      
-            getPhotoForPreview("08/31/2023").then((imgArr)=>{
-                let realUrl="";
-               // console.log(imgArr);
-                if(imgArr.length==0){
-                    realUrl=  noImage
-                }
-                else if(imgArr[0]==""){ 
-                    realUrl= noNotes;
-                }
-                else { realUrl=  imgArr[0];}
-                console.log(realUrl);
-                 return realUrl;
-            })
-            .catch((value)=>{
-
-                console.log("{wrong}");
-
-            })
-
-          
-            
-
-            
-           },
+           
         },
         message:{
         },
@@ -139,7 +151,8 @@ import noNotes from '@/assets/noNotes.png'
     height : 100px;
     background-color:#ffffff;
     display:flex;
-    justify-content:left;
+    justify-content:center;
+    align-content: center;
     z-index:0;
     margin-top: 0;
 }
@@ -184,4 +197,14 @@ h2{
     margin-right:28vw;
 
 }
+
+img{
+    
+    border-radius:50%;
+    align-self: center;
+
+    width: 24vw;
+    height:24vw;
+    
+    }
 </style>
