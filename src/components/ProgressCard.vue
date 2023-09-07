@@ -16,7 +16,7 @@
                             contain
                           
                             width= 100vw
-                            height=auto
+                            height=auto.
                             :src= "img"
                             border-radius="50%"
                             ></v-img> -->
@@ -24,16 +24,19 @@
                         
                     
                     </div>
-
+                   
                     <h2> {{group}}</h2>
                     <v-progress-linear :model-value="progress" color="blue-grey" height="25" width="50%" @update:model-value="(val)=> $emit('update', val)">
                         <template v-slot:default="{ value }">
                             <strong>{{ Math.ceil(value) }}%</strong>
                         </template>
                     </v-progress-linear>
+                  
+                    
                 
 
             </div>
+           
             
             
     
@@ -46,16 +49,23 @@ import { getPhotoForPreview, getUserNotes } from '@/plugins/fireBase';
 import noImage from '@/assets/noImage.png';
 import noNotes from '@/assets/noNotes.png'
     export default {
+        
 
-        mounted() { 
+        created() { 
 
+                   
+                   
+
+                console.log(this.group);
+
+                    
                     this.$emit("group", this.group);
-                    console.log(this.group+"noEmit");
+                    console.log(this.group);
 
 
                 getPhotoForPreview(this.dateFormatted, this.group)
                 .then((imgArr)=>{
-                    console.log(this.group+"wiefjlgjhl");
+                     console.log(this.group);
                     let realUrl="";
                 console.log(imgArr);
                     if(imgArr.length==0){
@@ -74,6 +84,9 @@ import noNotes from '@/assets/noNotes.png'
                     console.log("{wrong}");
 
                 })
+
+
+
             },
         props:{
             group: String,

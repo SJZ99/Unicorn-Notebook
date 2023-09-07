@@ -5,6 +5,7 @@
 
   <div class="page">
    
+    <div v-if=" note1 != ''">
 
     <ProgressCard
       :group= "note1"
@@ -13,26 +14,26 @@
       @update="(val)=>progress= val"
       
     >
-      
-
     </ProgressCard>
+  </div>
 
+  <div v-if="note2 !=''">
     <ProgressCard
       :group= "note2"
       :progress= "progress"
       @update="(val)=>progress= val">
-      
-
     </ProgressCard>
+  </div>
 
+
+    <div v-if="note3 != ''">
     <ProgressCard
       :group= "note3"
       :progress= "progress"
       @update="(val)=>progress= val">
-      
-
-    </ProgressCard>
     
+    </ProgressCard>
+  </div>
     
 
 </div>
@@ -61,12 +62,11 @@ import { getUserNotes } from '@/plugins/fireBase'
      
     }),
 
-  mounted(){
+  created(){
     
       
     getUserNotes().then((noteArr)=>{
                 this.note1=noteArr[0];
-             
                 this.note2=noteArr[1];
                 this.note3=noteArr[2];
             

@@ -159,8 +159,9 @@ try{
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
-        console.log(doc.data().image);
+         console.log(doc.id, " => ", doc.data());
+         console.log(doc.data().image);
+         console.log(group);
         imgUrl.push(doc.data().image);
       });
 
@@ -168,8 +169,8 @@ try{
         const querySnapshot = await getDocs(q2);
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
-          console.log(doc.data().image);
+          // console.log(doc.id, " => ", doc.data());
+          // console.log(doc.data().image);
           imgUrl.push(doc.data().image);
         });
       }
@@ -223,8 +224,8 @@ async function signIn( email, password){
 
 async function getUserNotes(){
   var userNotes=[];
-  // let userString = getAuth().currentUser.uid;
-  // console.log(userString+"!!!"+"look here");
+  var userString = auth.currentUser.uid;
+  console.log(userString+"!!!"+"look here");
   
  try{
        const q = query(collection(db, "UserInformation"), where("user", "==","WmS4EGjVqUVJ8AqrxYjBa8ctMaH3"));
@@ -233,8 +234,8 @@ async function getUserNotes(){
        const querySnapshot = await getDocs(q);
        querySnapshot.forEach((doc) => {
          // doc.data() is never undefined for query doc snapshots
-         console.log(doc.id, " => ", doc.data());
-         console.log(doc.data().note1+" "+doc.data().note2+" "+ doc.data().note3);
+        //  console.log(doc.id, " => ", doc.data());
+        //  console.log(doc.data().note1+" "+doc.data().note2+" "+ doc.data().note3);
          userNotes.push(doc.data().note1);
          userNotes.push(doc.data().note2);
          userNotes.push(doc.data().note3);
