@@ -12,6 +12,7 @@
               :items= items
               :rules=required
               v-model= selected
+              required 
               ></v-select>
 
 
@@ -33,6 +34,7 @@
                   accept="image/*"
                   v-model="file"
                   @update:model-value="onImageSelected"
+                   
 
               ></v-file-input>
 
@@ -240,7 +242,7 @@ import { connectStorageEmulator } from 'firebase/storage';
 
       async submit() {
 
-     window.alert(this.file.length);
+    
 
       
             window.alert("onePic");
@@ -253,6 +255,13 @@ import { connectStorageEmulator } from 'firebase/storage';
                   console.log("pic");
                   uploadText(this.selected, this.dateFormatted, this.url, this.Members, this.slider1, this.progress, this.progress, this.plan, this.imgBool);
                   this.$router.push('/submitted');
+                  
+
+                    setTimeout(() => {
+                    this.$router.push('/homepage');
+                    }, 1500);
+
+
                 
                 })
                 // 失敗的行為一律交給了 catch
@@ -266,6 +275,10 @@ import { connectStorageEmulator } from 'firebase/storage';
 
  pressSubmit(){
 
+          if(this.group!=""&& this.dataFormatted!="" && this.Members!="" && this.slider1!=""&& this.progress!=""&& this.progress!=""&& this.plan!=""){
+
+        
+
           if(this.file.length==1){
             this.imgBool="1";
             this.submit();
@@ -275,8 +288,11 @@ import { connectStorageEmulator } from 'firebase/storage';
             this.imgBool="0";
             uploadText(this.selected, this.dateFormatted, "noImg", this.Members, this.slider1, this.progress, this.progress, this.plan, this.imgBool);
                   this.$router.push('/submitted');
-                  console.log("finish differentiating imgBool");
+                    setTimeout(() => {
+                    this.$router.push('/homepage');
+                    }, 1500);
           }
+        }  
 
       },
       async checkApi(userName) {

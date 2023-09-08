@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, doc, setDoc,addDoc, query, where, getDocs } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, doc, setDoc,addDoc, query, where, getDocs,orderBy } from "firebase/firestore";
+import { getAuth,setPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -121,6 +121,34 @@ async function uploadImage(file){
 }
 
 
+  async function getProgressSlider(dateToday, group){
+    var slider=[];
+    console.log("slider");
+   try{
+         const q = query(collection(db, "Notebook"), where("date", "==", dateToday),where("group","==",group));
+   
+         const querySnapshot = await getDocs(q);
+         querySnapshot.forEach((doc) => {
+           // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            console.log("slider"+ doc.data().slider);
+           slider.push(doc.data().slider);
+         });
+   
+        
+         
+         return slider;
+     }  
+     catch(e){
+       console.error("Error finding slider progress: ", e);
+     }
+   
+   
+   }
+
+
+
+
 async function uploadText(group,date,image, member, slider, progress, problem, plan, imgBool){
 
 
@@ -194,6 +222,8 @@ const appCheck = initializeAppCheck(app, {
 });
 
 const auth = getAuth();
+auth.setPersistence(auth.Auth.Persistence.LOCAL)
+        .then(() => auth.signInWithCustomToken(token));
 
 
 async function signIn( email, password){
@@ -216,15 +246,14 @@ async function signIn( email, password){
 
 
   })
-
-
 }
   )
 }
 
-async function getUserNotes(){
+  let userString = auth.currentUser.uid;
+  async function getUserNotes(){
   var userNotes=[];
-  var userString = auth.currentUser.uid;
+
   console.log(userString+"!!!"+"look here");
   
  try{
@@ -253,6 +282,6 @@ async function getUserNotes(){
  
 
 export {
-  uploadImage, getDownloadURL, uploadText, signIn, auth, getPhotoForPreview,getUserNotes
+  uploadImage, getDownloadURL, uploadText, signIn, auth, getPhotoForPreview,getUserNotes, getProgressSlider
 }
 

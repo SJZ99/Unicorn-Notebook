@@ -2,7 +2,9 @@
 
 <Header>
 </Header>
-
+<div id="d1"> </div>
+slider
+<!-- <h2> {{ slider }}  </h2> -->
   <div class="page">
    
     <div v-if=" note1 != ''">
@@ -45,7 +47,7 @@
  import Header from '@/components/Header.vue'
  import ProgressCard from '@/components/ProgressCard.vue'
  import Footer from '@/components/endBox.vue'
-import { getUserNotes } from '@/plugins/fireBase'
+import { getProgressSlider, getUserNotes,auth } from '@/plugins/fireBase'
 
 
   export default {
@@ -58,12 +60,16 @@ import { getUserNotes } from '@/plugins/fireBase'
       note1:"",
       note2:"",
       note3:"",
+      slider:auth.currentUser.uid,
            
      
     }),
 
   created(){
-    
+
+    location.replace('#d1');
+    // console.log(this.slider);
+
       
     getUserNotes().then((noteArr)=>{
                 this.note1=noteArr[0];
@@ -75,6 +81,7 @@ import { getUserNotes } from '@/plugins/fireBase'
                 console.log(errorMessage);
 
             })
+
 
     },
     message:{

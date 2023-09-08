@@ -26,7 +26,7 @@
                     </div>
                    
                     <h2> {{group}}</h2>
-                    <v-progress-linear :model-value="progress" color="blue-grey" height="25" width="50%" @update:model-value="(val)=> $emit('update', val)">
+                    <v-progress-linear :model-value="sliderProgress" color="blue-grey" height="25" width="50%" @update:model-value="(val)=> $emit('update', val)">
                         <template v-slot:default="{ value }">
                             <strong>{{ Math.ceil(value) }}%</strong>
                         </template>
@@ -45,17 +45,14 @@
 
 
 <script>
-import { getPhotoForPreview, getUserNotes } from '@/plugins/fireBase';
+import { getPhotoForPreview, getUserNotes,getProgressSlider } from '@/plugins/fireBase';
 import noImage from '@/assets/noImage.png';
 import noNotes from '@/assets/noNotes.png'
     export default {
         
 
         created() { 
-
-                   
-                   
-
+         
                 console.log(this.group);
 
                     
@@ -85,8 +82,16 @@ import noNotes from '@/assets/noNotes.png'
 
                 })
 
+                getProgressSlider(this.dateFormatted, this.group)
+                    .then((sliderArr)=>{
+                    console.log(sliderArr[0]);
+                    this.sliderProgress=sliderArr[0];
 
+                } )
+                .catch((e)=>{
+                    console.log(e);
 
+            })
             },
         props:{
             group: String,
@@ -98,7 +103,7 @@ import noNotes from '@/assets/noNotes.png'
             date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
            dateFormatted:vm.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
            img:"",
-          
+           sliderProgress:"",
      
         }),
         computed:{
@@ -126,9 +131,10 @@ import noNotes from '@/assets/noNotes.png'
         message:{
         },
 
-        component:{
+        components:{
             
         },
+     
     }
 </script>
 
